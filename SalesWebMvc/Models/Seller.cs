@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 namespace SalesWebMvc.Models
@@ -20,7 +21,9 @@ namespace SalesWebMvc.Models
         [Display(Name = "Base Salary")]
         [DisplayFormat(DataFormatString = "{0:F2}")]
         public double BaseSalary { get; set; }
+
         public Department Department { get; set; }
+
         [Display(Name = "Department Id")]
         public int DepartmentId {  get; set; }
         public ICollection<SalesRecord> Sales {  get; set; } = new List<SalesRecord>();

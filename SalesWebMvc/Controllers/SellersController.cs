@@ -35,12 +35,12 @@ namespace SalesWebMvc.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(Seller seller)
         {
-            if (!ModelState.IsValid)
-            {
-                var departments = await _departmentService.FindAllAsync();
-                var viewModel = new SellerFormViewModel { Seller = seller, Departments = departments };
-                return View(viewModel);
-            }
+                     /*if (!ModelState.IsValid)
+                       {
+                           var departments = await _departmentService.FindAllAsync();
+                           var viewModel = new SellerFormViewModel { Seller = seller, Departments = departments };
+                           return View(viewModel);
+                         }*/
             await _sellerService.InsertAsync(seller);
             return RedirectToAction(nameof(Index));
         }
@@ -66,10 +66,15 @@ namespace SalesWebMvc.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Delete(int id)
         {
-            await _sellerService.RemoveAsync(id);
-
-            return RedirectToAction(nameof(Index));
-         
+            try
+            {
+                await _sellerService.RemoveAsync(id);
+                return RedirectToAction(nameof(Index));
+            }
+            catch (IntegrityException e) 
+            {
+                return RedirectToAction(nameof(Error), new { message = e.Message});
+            }
         }
 
         public async Task<IActionResult> Details(int? id) 
@@ -111,12 +116,13 @@ namespace SalesWebMvc.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, Seller seller)
         {
-            if (!ModelState.IsValid)
+            /*if (!ModelState.IsValid)
             {
                 var departments = await _departmentService.FindAllAsync();
                 var viewModel = new SellerFormViewModel { Seller = seller, Departments = departments};
                 return View(viewModel);
-            }
+            
+            }*/
             if (id != seller.Id) 
             {
                 return RedirectToAction(nameof(Error), new { message = "Id mismatch" });
